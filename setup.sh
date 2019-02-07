@@ -4,7 +4,7 @@ function setup_proto(){
     rm -rf net
     mkdir net
     cd proto
-    protoc --python_out=../net/ *.proto
+    python -m grpc_tools.protoc -I. --python_out=../net/ --grpc_python_out=../net/ *.proto
 }
 
 
