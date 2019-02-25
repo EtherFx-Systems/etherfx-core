@@ -5,6 +5,6 @@ enum StatusCode {
 }
  
 message Status {
-    StatusCode status = 1;
+    StatusCode code = 1;
     string message = 2;
 }

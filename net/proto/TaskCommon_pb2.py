@@ -20,7 +20,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   package='',
   syntax='proto3',
   serialized_options=None,
-  serialized_pb=_b('\n\x10TaskCommon.proto\"6\n\x06Status\x12\x1b\n\x06status\x18\x01 \x01(\x0e\x32\x0b.StatusCode\x12\x0f\n\x07message\x18\x02 \x01(\t*\x1f\n\nStatusCode\x12\x06\n\x02OK\x10\x00\x12\t\n\x05\x45RROR\x10\x01\x62\x06proto3')
+  serialized_pb=_b('\n\x10TaskCommon.proto\"4\n\x06Status\x12\x19\n\x04\x63ode\x18\x01 \x01(\x0e\x32\x0b.StatusCode\x12\x0f\n\x07message\x18\x02 \x01(\t*\x1f\n\nStatusCode\x12\x06\n\x02OK\x10\x00\x12\t\n\x05\x45RROR\x10\x01\x62\x06proto3')
 )
 
 _STATUSCODE = _descriptor.EnumDescriptor(
@@ -40,8 +40,8 @@ _STATUSCODE = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   serialized_options=None,
-  serialized_start=76,
-  serialized_end=107,
+  serialized_start=74,
+  serialized_end=105,
 )
 _sym_db.RegisterEnumDescriptor(_STATUSCODE)
 
@@ -59,7 +59,7 @@ _STATUS = _descriptor.Descriptor(
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='status', full_name='Status.status', index=0,
+      name='code', full_name='Status.code', index=0,
       number=1, type=14, cpp_type=8, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
@@ -85,10 +85,10 @@ _STATUS = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=20,
-  serialized_end=74,
+  serialized_end=72,
 )
 
-_STATUS.fields_by_name['status'].enum_type = _STATUSCODE
+_STATUS.fields_by_name['code'].enum_type = _STATUSCODE
 DESCRIPTOR.message_types_by_name['Status'] = _STATUS
 DESCRIPTOR.enum_types_by_name['StatusCode'] = _STATUSCODE
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)

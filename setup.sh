@@ -1,10 +1,8 @@
 #!/bin/bash
 function setup_proto(){
-    echo "Setting up protocol buffer python interfaces in ${PWD##*/}/net"
-    rm -rf net
-    mkdir net
+    echo "Setting up protocol buffer python interfaces in ${PWD##*/}/net/proto"
     cd proto
-    python -m grpc_tools.protoc -I. --python_out=../net/protobuf/ --grpc_python_out=../net/protobuf/ *.proto
+    python -m grpc_tools.protoc -I. --python_out=../net/proto --grpc_python_out=../net/proto *.proto
 }
 
 
