@@ -1,6 +1,6 @@
 import grpc
 import net.proto.TaskService_pb2_grpc as TaskService
-from net.proto.TaskMetadata_pb2 import  TaskMetadata, TaskArgument
+from net.proto.TaskMetadata_pb2 import TaskMetadata, TaskArgument
 from net.proto.TaskCommon_pb2 import StatusCode
 
 class TaskClient:
@@ -9,11 +9,11 @@ class TaskClient:
         self.__client = TaskService.TaskServiceStub(self.__channel)
 
     def send_promise(self, promise):
-        _task = TaskMetadata(module= promise.__module,
+        _task = TaskMetadata(module   = promise.__module,
                              function = promise.__function,
-                             args = len(promise.__args),
-                             kwargs = promise.__kwargs.keys(),
-                             _class = promise.__class)
+                             args     = len(promise.__args),
+                             kwargs   = promise.__kwargs.keys(),
+                             _class   = promise.__class)
 
         #sends the task metadata, resp is the TaskReceived
         resp = self.__client.AddTask(_task)
@@ -22,6 +22,10 @@ class TaskClient:
         else:
             #add error class
             pass
+
+    def make_argument(self, ord, arg):
+        _arg = TaskArgument()
+        if isinstance(ord, str):
 
     def exec_promise(self, Promise):
         pass
