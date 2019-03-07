@@ -15,14 +15,16 @@ class TaskClient:
         resp = self.__client.AddTask(_task)
         if resp.status.code == OK:
             promise.__task_id = resp.task_id
-            for arg in promise.__args:
-                # C H O N K
-                self.__client
+            for idx, arg in enumerate(promise.__args):
+                self.__client.AddArgument(self.make_argument(promise.__task_id, idx, arg))
+            for key, arg in promise.__kwargs.items():
+                self.__client.AddArgument(self.make_argument(promise.__task_id, key, arg))
         else:
             #add error class
             pass
 
     def make_argument(self, task_id, ord, arg):
+        # Send Metadata First
         arg_seq = ArgumentMetadata(task_id = task_id)
         if isinstance(ord, str):
             arg_seq.arg_type = KEYWORD_ARGUMENT
@@ -32,6 +34,7 @@ class TaskClient:
             arg_seq.num = ord
         yield TaskArgument(arg_seq = arg_seq)
 
+        #Chunk and yield actual argument bytes
         bin_arg = pickle.dumps(arg)
         mv_arg = memoryview(bin_arg)
         chunks = len(bin_arg) / (1 << 20)
