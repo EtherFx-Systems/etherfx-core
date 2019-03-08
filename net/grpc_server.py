@@ -1,4 +1,4 @@
-from proto.TaskService_pb2 import TaskService
+from net.proto.TaskService_pb2 import TaskService
 
 class TaskServer(TaskService):
     def AddTask(self, request, context):
