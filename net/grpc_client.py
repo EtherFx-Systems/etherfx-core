@@ -19,8 +19,8 @@ class TaskClient:
         resp = self.__client.AddTask(task)
         if resp.status.code == OK:
             promise.set_task_id(resp.task_id)
-            promise.send_args(self)
-            promise.send_kwargs(self)
+            promise.send_args(self.__client)
+            promise.send_kwargs(self.__client)
         else:
             raise ConnectionError("Promise could not be registered to the Orchestrator")
 

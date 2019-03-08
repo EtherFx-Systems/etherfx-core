@@ -27,7 +27,7 @@ class Promise:
     def send_kwargs(self, client):
         if len(self.__kwargs.keys()) > 0:
             for key, arg in self.__kwargs.items():
-                client.__client.AddArgument.future(client.make_argument(self.__task_id, key, arg))
+                client.AddArgument.future(client.make_argument(self.__task_id, key, arg))
 
 
     def exec(self, client):
