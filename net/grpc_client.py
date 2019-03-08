@@ -10,7 +10,7 @@ class ConnectionError(Exception):
 
 class TaskClient:
     def __init__(self, host, port, cert_file = None):
-        self.__channel = grpc.insecure_channel(f'${host}:${port}')
+        self.__channel = grpc.insecure_channel(f'{host}:{port}')
         self.__client = TaskService.TaskServiceStub(self.__channel)
 
     def send_promise(self, promise):
@@ -18,13 +18,9 @@ class TaskClient:
         # Sends the task metadata, resp is the TaskReceived
         resp = self.__client.AddTask(task)
         if resp.status.code == OK:
-            promise.__task_id = resp.task_id
-            # Send args
-            for idx, arg in enumerate(promise.__args):
-                self.__client.AddArgument.future(self.make_argument(promise.__task_id, idx, arg))
-            # Send kwargs
-            for key, arg in promise.__kwargs.items():
-                self.__client.AddArgument.future(self.make_argument(promise.__task_id, key, arg))
+            promise.set_task_id(resp.task_id)
+            promise.send_args(self)
+            promise.send_kwargs(self)
         else:
             raise ConnectionError("Promise could not be registered to the Orchestrator")
 
