@@ -20,14 +20,15 @@ class Promise:
     def task_id(self):
         return self.__task_id
 
-    def send_args(self, client):
+    def send_args(self, client, stub):
         if len(self.__args) > 0:
             for idx, arg in enumerate(self.__args):
-                client.AddArgument.future(client.make_argument(self.__task_id, idx, arg))
-    def send_kwargs(self, client):
+                stub.AddArgument(client.make_argument(self.__task_id, idx, arg))
+    
+    def send_kwargs(self, client, stub):
         if len(self.__kwargs.keys()) > 0:
             for key, arg in self.__kwargs.items():
-                client.AddArgument.future(client.make_argument(self.__task_id, key, arg))
+                stub.AddArgument(client.make_argument(self.__task_id, key, arg))
 
 
     def exec(self, client):

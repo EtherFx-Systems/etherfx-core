@@ -3,6 +3,7 @@ import dill as pickle
 import net.proto.TaskService_pb2_grpc as TaskService
 from net.proto.TaskMetadata_pb2 import TaskMetadata, TaskArgument, ArgumentMetadata, ARGUMENT, KEYWORD_ARGUMENT
 from net.proto.TaskCommon_pb2 import OK
+from math import ceil
 
 class ConnectionError(Exception):
     def __init__(self, message):
@@ -19,8 +20,8 @@ class TaskClient:
         resp = self.__client.AddTask(task)
         if resp.status.code == OK:
             promise.set_task_id(resp.task_id)
-            promise.send_args(self.__client)
-            promise.send_kwargs(self.__client)
+            promise.send_args(self, self.__client)
+            promise.send_kwargs(self, self.__client)
         else:
             raise ConnectionError("Promise could not be registered to the Orchestrator")
 
@@ -37,10 +38,11 @@ class TaskClient:
 
         #Chunk and yield actual argument bytes
         bin_arg = pickle.dumps(arg)
+        print(bin_arg)
         mv_arg = memoryview(bin_arg)
         chunks = len(bin_arg) / (1 << 20)
-        for i in range(chunks):
-            yield TaskArgument(arg = mv_arg[i * chunks : (i + 1) * chunks])
+        # for i in range(ceil(chunks)):
+        yield TaskArgument(arg=bin_arg)#(arg = mv_arg[i * (1 << 20) : (i + 1) * (1 << 20)])
 
     def exec_promise(self, promise):
         pass
