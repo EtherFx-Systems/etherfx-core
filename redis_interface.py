@@ -2,6 +2,7 @@ import redis
 import dill
 
 redis_client = redis.Redis(host='35.193.40.68', port=6379, db=0) # Make connection to Redis instance running locally
+
 class GDSClient():
 	def test_import(self):
 		print ("Import Successful")
@@ -79,7 +80,8 @@ def main():
 	args = ["abc", "def", "ghi"]
 	#clear_gds_for_task_id("fooda")
 	#print add_args_to_gds("fooda", args)
-	print(self.retrieve_value_list_for_key_gds("fooda"))
+	cl = GDSClient()
+	print(cl.retrieve_value_list_for_key_gds("3ece0261-b0e1-481f-b460-e9c3594761b9"))
 	#print get_args_from_gds("fooda")
 if __name__ == '__main__':
 	main()
