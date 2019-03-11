@@ -11,8 +11,7 @@ class GDSClient:
         print("Import Successful")
 
     def add_args_to_gds(self, task_id, list_of_args):
-
-        # Check if this key already exists
+        """Check if this key already exists"""
         if self.check_key_exists_in_gds(
             task_id
         ):  # Returns number of keys found - should be 0
@@ -23,14 +22,13 @@ class GDSClient:
         return self.insert_in_key_list_redis(task_id, list_of_args)
 
     def get_args_from_gds(self, task_id):
-
         if not self.check_key_exists_in_gds(task_id):
             raise Exception(
                 "Task ID not found on GDS"
             )  # Temporary - Replace by EtherFx error
+        return retrieve_value_list_for_key_gds(task_id)
 
     def retrieve_value_list_for_key_gds(self, redis_key):
-
         number_of_vals = redis_client.llen(redis_key)
         vals_retrieved = redis_client.lrange(redis_key, 0, number_of_vals - 1)
 
@@ -43,7 +41,6 @@ class GDSClient:
             return False
 
     def insert_in_key_list_redis(self, task_id, values_to_be_added):
-
         try:
             for x in values_to_be_added:
                 # print type(x)
@@ -55,7 +52,6 @@ class GDSClient:
     def set_result_in_gds(self, task_id, execution_result):
         """
 		TODO: Figure out if errors need to be stored as elements as opposed to the first (and only) element of the list
-
 		"""
         if self.check_key_exists_in_gds(task_id):
             self.clear_gds_for_task_id(task_id)
@@ -63,11 +59,9 @@ class GDSClient:
 
         else:
             raise Exception("Task ID does not exist on the GDS.")
-
         return False
 
     def get_result_from_gds(self, task_id):
-
         if not self.check_key_exists_in_gds(task_id):
             raise Exception("Task ID does not exist on the GDS.")
         else:
