@@ -32,7 +32,7 @@ class RabbitMQInterface:
         self.payload = pickle.dumps(TaskMetaData)
         self.publishToQueue()
 
-    def subscribe_to_queue(self, callback_method=self.callback):
+    def subscribe_to_queue(self, callback_method=None):
         connection = self.create_connection(IP_ADDRESS)
         channel = connection.channel()
         channel.queue_declare(queue="demo_publishing_queue")
@@ -44,6 +44,8 @@ class RabbitMQInterface:
             durable=True,
             auto_delete=False,
         )
+        if callback_method is None:
+            callback_method = self.callback
 
         channel.basic_consume(callback_method, queue="demo_publishing_queue", no_ack=True)
         channel.start_consuming()
