@@ -15,20 +15,23 @@ class Promise:
                             args     = len(self.__args),
                             kwargs   = self.__kwargs.keys(),
                             _class   = self.__class)
-    def set_task_id(self, task_id):
+    def ether_set_task_id(self, task_id):
         self.__task_id = task_id
-    def task_id(self):
+        
+    def ether_task_id(self):
         return self.__task_id
 
-    def send_args(self, client):
+    def ether_send_args(self, client):
         if len(self.__args) > 0:
             for idx, arg in enumerate(self.__args):
                 client.AddArgument.future(client.make_argument(self.__task_id, idx, arg))
-    def send_kwargs(self, client):
+    def ether_send_kwargs(self, client):
         if len(self.__kwargs.keys()) > 0:
             for key, arg in self.__kwargs.items():
                 client.AddArgument.future(client.make_argument(self.__task_id, key, arg))
 
+    def ether_send(self, client):
+        client.send_promise(self)
 
     def exec(self, client):
         return client.exec_promise(self)

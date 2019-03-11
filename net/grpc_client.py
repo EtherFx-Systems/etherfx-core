@@ -18,9 +18,9 @@ class TaskClient:
         # Sends the task metadata, resp is the TaskReceived
         resp = self.__client.AddTask(task)
         if resp.status.code == OK:
-            promise.set_task_id(resp.task_id)
-            promise.send_args(self.__client)
-            promise.send_kwargs(self.__client)
+            promise.ether_set_task_id(resp.task_id)
+            promise.ether_send_args(self.__client)
+            promise.ether_send_kwargs(self.__client)
         else:
             raise ConnectionError("Promise could not be registered to the Orchestrator")
 
@@ -40,7 +40,7 @@ class TaskClient:
         mv_arg = memoryview(bin_arg)
         chunks = len(bin_arg) / (1 << 20)
         for i in range(chunks):
-            yield TaskArgument(arg = mv_arg[i * chunks : (i + 1) * chunks])
+            yield TaskArgument(arg = mv_arg[i * (1 << 20) : (i + 1) * (1 << 20)])
 
     def exec_promise(self, promise):
         pass
