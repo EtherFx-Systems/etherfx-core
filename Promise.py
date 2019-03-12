@@ -3,13 +3,14 @@ from .net.grpc_client import TaskClient
 
 
 class Promise:
-    def __init__(self, module, function, args, kwargs, _class=None):
+    def __init__(self, client, module, function, args, kwargs, _class=None):
         self.__module = module
         self.__function = function
         self.__args = args
         self.__kwargs = kwargs
         self.__class = _class
         self.__task_id = None
+        self.__client = client
 
     def __meta__(self):
         return TaskMetadata(
@@ -37,7 +38,7 @@ class Promise:
                 stub.AddArgument(client.make_argument(self.__task_id, key, arg))
 
     def ether_send(self, client):
-        client.send_promise(self)
+        self.__client.send_promise(self)
 
-    def exec(self, client):
-        return client.exec_promise(self)
+    def exec(self):
+        return self.__client.exec_promise(self)

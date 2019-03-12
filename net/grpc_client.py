@@ -1,7 +1,7 @@
 import grpc
 import dill as pickle
 from .proto.TaskService_pb2_grpc import TaskServiceStub
-from .proto.TaskMetadata_pb2 import TaskMetadata, TaskArgument, ArgumentMetadata, ARGUMENT, KEYWORD_ARGUMENT
+from .proto.TaskMetadata_pb2 import TaskMetadata, TaskArgument, ExecTaskRequest, ArgumentMetadata, ARGUMENT, KEYWORD_ARGUMENT
 from .proto.TaskCommon_pb2 import OK
 from math import ceil
 
@@ -38,14 +38,14 @@ class TaskClient:
 
         #Chunk and yield actual argument bytes
         bin_arg = pickle.dumps(arg)
-        print(bin_arg)
         mv_arg = memoryview(bin_arg)
         chunks = len(bin_arg) / (1 << 20)
-        # for i in range(ceil(chunks)):
-        yield TaskArgument(arg=bin_arg)#(arg = mv_arg[i * (1 << 20) : (i + 1) * (1 << 20)])
+        #for i in range(chunks):
+        #    yield TaskArgument(arg = mv_arg[i * (1 << 20) : (i + 1) * (1 << 20)])
+        yield TaskArgument(arg=bin_arg)
 
     def exec_promise(self, promise):
-        pass
-
-global TaskClientInstance
-TaskClientInstance = TaskClient('0.0.0.0', '8080')
+        while True:
+            resp = self.__client.PollTask(ExecTaskRequest(task_id=promise.ether_task_id()))
+            if resp.HasField("result"):
+                return pickle.loads(resp.result)
