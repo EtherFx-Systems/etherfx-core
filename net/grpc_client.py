@@ -1,8 +1,8 @@
 import grpc
 import dill as pickle
-import net.proto.TaskService_pb2_grpc as TaskService
-from net.proto.TaskMetadata_pb2 import TaskMetadata, TaskArgument, ArgumentMetadata, ARGUMENT, KEYWORD_ARGUMENT
-from net.proto.TaskCommon_pb2 import OK
+from .proto.TaskService_pb2_grpc import TaskServiceStub
+from .proto.TaskMetadata_pb2 import TaskMetadata, TaskArgument, ArgumentMetadata, ARGUMENT, KEYWORD_ARGUMENT
+from .proto.TaskCommon_pb2 import OK
 from math import ceil
 
 class ConnectionError(Exception):
@@ -12,7 +12,7 @@ class ConnectionError(Exception):
 class TaskClient:
     def __init__(self, host, port, cert_file = None):
         self.__channel = grpc.insecure_channel(f'{host}:{port}')
-        self.__client = TaskService.TaskServiceStub(self.__channel)
+        self.__client = TaskServiceStub(self.__channel)
 
     def send_promise(self, promise):
         task = promise.__meta__()

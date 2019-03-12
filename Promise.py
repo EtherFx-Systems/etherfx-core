@@ -1,5 +1,5 @@
-from net.proto.TaskMetadata_pb2 import TaskMetadata, ExecTaskRequest
-from net.grpc_client import TaskClientInstance
+from .net.proto.TaskMetadata_pb2 import TaskMetadata, ExecTaskRequest
+from .net.grpc_client import TaskClient
 
 
 class Promise:
