@@ -26,7 +26,7 @@ class GDSClient:
             raise Exception(
                 "Task ID not found on GDS"
             )  # Temporary - Replace by EtherFx error
-        return retrieve_value_list_for_key_gds(task_id)
+        return self.retrieve_value_list_for_key_gds(task_id)
 
     def retrieve_value_list_for_key_gds(self, redis_key):
         number_of_vals = redis_client.llen(redis_key)
@@ -56,7 +56,7 @@ class GDSClient:
             return self.retrieve_value_list_for_key_gds(task_id)
 
     def get_result_from_gds_noexcept(self, task_id):
-        if self.check_key_exists_in_gds(task_id):
+        if self.check_key_exists_in_gds(task_id+"_result"):
             return self.retrieve_value_list_for_key_gds(task_id+"_result")
         else:
             return None
