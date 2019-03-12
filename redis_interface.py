@@ -49,23 +49,24 @@ class GDSClient:
             print(e)
         return True
 
-    def set_result_in_gds(self, task_id, execution_result):
-        """
-		TODO: Figure out if errors need to be stored as elements as opposed to the first (and only) element of the list
-		"""
-        if self.check_key_exists_in_gds(task_id):
-            self.clear_gds_for_task_id(task_id)
-            return self.insert_in_key_list_redis(execution_result)
-
-        else:
-            raise Exception("Task ID does not exist on the GDS.")
-        return False
-
     def get_result_from_gds(self, task_id):
         if not self.check_key_exists_in_gds(task_id):
             raise Exception("Task ID does not exist on the GDS.")
         else:
             return self.retrieve_value_list_for_key_gds(task_id)
+
+    def get_result_from_gds_noexcept(self, task_id):
+        if self.check_key_exists_in_gds(task_id):
+            return self.retrieve_value_list_for_key_gds(task_id+"_result")
+        else:
+            return None
+
+    def set_result_in_gds(self, task_id, execution_result):
+        """
+            TODO: Figure out if errors need to be stored as elements as opposed to the first (and only) element of the list
+        """
+        if not task_id: return
+        return self.insert_in_key_list_redis(task_id+"_result", execution_result)
 
     def clear_gds_for_task_id(self, task_id):
         if redis_client.exists(task_id) > 0:
