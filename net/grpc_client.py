@@ -1,8 +1,8 @@
 import grpc
 import dill as pickle
-import net.proto.TaskService_pb2_grpc as TaskService
-from net.proto.TaskMetadata_pb2 import TaskMetadata, TaskArgument, ArgumentMetadata, ARGUMENT, KEYWORD_ARGUMENT
-from net.proto.TaskCommon_pb2 import OK
+from .proto.TaskService_pb2_grpc import TaskServiceStub
+from .proto.TaskMetadata_pb2 import TaskMetadata, TaskArgument, ArgumentMetadata, ARGUMENT, KEYWORD_ARGUMENT
+from .proto.TaskCommon_pb2 import OK
 from math import ceil
 
 class ConnectionError(Exception):
@@ -12,16 +12,16 @@ class ConnectionError(Exception):
 class TaskClient:
     def __init__(self, host, port, cert_file = None):
         self.__channel = grpc.insecure_channel(f'{host}:{port}')
-        self.__client = TaskService.TaskServiceStub(self.__channel)
+        self.__client = TaskServiceStub(self.__channel)
 
     def send_promise(self, promise):
         task = promise.__meta__()
         # Sends the task metadata, resp is the TaskReceived
         resp = self.__client.AddTask(task)
         if resp.status.code == OK:
-            promise.set_task_id(resp.task_id)
-            promise.send_args(self, self.__client)
-            promise.send_kwargs(self, self.__client)
+            promise.ether_set_task_id(resp.task_id)
+            promise.ether_send_args(self, self.__client)
+            promise.ether_send_kwargs(self, self.__client)
         else:
             raise ConnectionError("Promise could not be registered to the Orchestrator")
 
