@@ -57,7 +57,7 @@ class GDSClient:
 
     def get_result_from_gds_noexcept(self, task_id):
         if self.check_key_exists_in_gds(task_id+"_result"):
-            return self.retrieve_value_list_for_key_gds(task_id+"_result")
+            return self.retrieve_value_list_for_key_gds(task_id+"_result")[0]
         else:
             return None
 
