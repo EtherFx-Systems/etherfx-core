@@ -2,7 +2,7 @@ import redis
 import dill
 
 redis_client = redis.Redis(
-    host="35.193.40.68", port=6379, db=0
+    host="35.232.188.136", port=6379, db=0
 )  # Make connection to Redis instance running locally
 
 
