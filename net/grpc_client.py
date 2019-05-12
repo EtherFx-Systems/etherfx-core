@@ -3,6 +3,7 @@ import dill as pickle
 from .proto.TaskService_pb2_grpc import TaskServiceStub
 from .proto.TaskMetadata_pb2 import TaskMetadata, TaskArgument, ExecTaskRequest, ArgumentMetadata, ARGUMENT, KEYWORD_ARGUMENT
 from .proto.TaskCommon_pb2 import OK
+from io import BytesIO
 from math import ceil
 
 class ConnectionError(Exception):
@@ -37,12 +38,13 @@ class TaskClient:
         yield TaskArgument(arg_seq = arg_seq)
 
         #Chunk and yield actual argument bytes
-        bin_arg = pickle.dumps(arg)
-        mv_arg = memoryview(bin_arg)
-        chunks = len(bin_arg) / (1 << 20)
-        #for i in range(chunks):
-        #    yield TaskArgument(arg = mv_arg[i * (1 << 20) : (i + 1) * (1 << 20)])
-        yield TaskArgument(arg=bin_arg)
+        bin_arg = BytesIO(pickle.dumps(arg))
+        read_sz = 1 << 20
+        while True:
+            ret_arg = bin_arg.read(read_sz)
+            if len(ret_arg) == 0:
+                return
+            yield TaskArgument(arg=ret_arg)
 
     def exec_promise(self, promise):
         while True:
