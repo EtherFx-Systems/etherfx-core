@@ -4,7 +4,7 @@ import json
 
 logging.basicConfig()
 
-IP_ADDRESS = "35.188.49.28"
+IP_ADDRESS = "35.202.107.208"
 
 
 class RabbitMQInterface:
