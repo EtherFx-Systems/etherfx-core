@@ -13,7 +13,12 @@ class ConnectionError(Exception):
 class TaskClient:
     def __init__(self, host, port, cert_file = None):
         self.__channel = grpc.insecure_channel(f'{host}:{port}')
-        self.__client = TaskServiceStub(self.__channel)
+        try:
+            grpc.channel_ready_future(self.__channel).result(timeout=30)
+        except grpc.FutureTimeoutError:
+            print("Error connecting to server")
+        else:
+            self.__client = TaskServiceStub(self.__channel)
 
     def send_promise(self, promise):
         task = promise.__meta__()
